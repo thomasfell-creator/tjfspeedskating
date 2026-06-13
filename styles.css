@@ -4,40 +4,25 @@ body {
 }
 
 header {
-
     display: flex;
-
     justify-content: space-between;
-
     align-items: center;
-
     max-width: 1200px;
-
     margin: 0 auto;
-
     padding: 20px 40px;
-
     background-color: #000000;
     color:white;
-
 }
 
 .logo {
-
     height: 150px;
-
     width: auto;
-
 }
 
 nav a {
-
     color: white;
-
     text-decoration: none;
-
     margin-left: 20px;
-
 }
 
 .hero {
@@ -50,6 +35,7 @@ footer {
     padding: 20px;
     text-align: center;
 }
+
 .contact {
     max-width: 600px;
     margin: 40px auto;
