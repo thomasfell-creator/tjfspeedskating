@@ -74,3 +74,11 @@ button {
     border: none;
     cursor: pointer;
 }
+
+section {
+    background-color: #000000;
+    color: white;
+    padding: 60px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
