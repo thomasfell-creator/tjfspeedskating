@@ -2,6 +2,27 @@ body {
     margin: 0;
     font-family: Arial, sans-serif;
 }
+a {
+
+    color: #d45805;
+
+    text-decoration: none;
+
+}
+
+a:hover {
+
+    color: #ff7a1a;
+
+    text-decoration: underline;
+
+}
+
+a:visited {
+
+    color: #d45805;
+
+}
 
 header {
     display: flex;
