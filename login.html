@@ -1,111 +1,70 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Member Login | TJF Speed Skating</title>
 
     <link rel="stylesheet" href="styles.css">
 
     <style>
-
         .login-container {
-
             max-width: 450px;
-
             margin: 80px auto;
-
             padding: 30px;
-
             border: 1px solid #ddd;
-
             border-radius: 10px;
-
+            background: white;
         }
 
         .login-container h1 {
-
             text-align: center;
-
             margin-bottom: 30px;
-
         }
 
         .login-container label {
-
             display: block;
-
             margin-top: 15px;
-
             margin-bottom: 5px;
-
         }
 
         .login-container input {
-
             width: 100%;
-
             padding: 12px;
-
             box-sizing: border-box;
-
         }
 
         .login-container button {
-
             width: 100%;
-
-            margin-top: 20px;
-
+            margin-top: 15px;
             padding: 12px;
-
             cursor: pointer;
-
         }
 
         .message {
-
             margin-top: 15px;
-
             text-align: center;
-
         }
 
         .error {
-
             color: red;
-
         }
 
         .success {
-
             color: green;
-
         }
-
     </style>
-
 </head>
 
 <body>
 
 <header>
-
     <img src="images/logo.png" alt="TJF Speed Skating Logo" class="logo">
 
     <nav>
-
         <a href="index.html">Home</a>
-
         <a href="contact.html">Contact</a>
-
     </nav>
-
 </header>
 
 <div class="login-container">
@@ -113,175 +72,155 @@
     <h1>Member Login</h1>
 
     <label for="email">Email Address</label>
-
     <input
-
         type="email"
-
         id="email"
-
         placeholder="Enter your email"
-
         required>
 
     <label for="password">Password</label>
-
     <input
-
         type="password"
-
         id="password"
-
         placeholder="Enter your password"
-
         required>
 
     <button onclick="login()">
-
         Login
-
     </button>
 
     <button onclick="resetPassword()">
-
         Reset Password
-
     </button>
 
     <div id="message" class="message"></div>
 
 </div>
 
-<!-- Supabase -->
-
+<!-- Supabase CDN -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<script>
-
-console.log("window.supabase =", window.supabase);
-
-</script>
-
+<!-- Your Supabase configuration -->
 <script src="js/supabase.js"></script>
+
+<script>
 
 async function login() {
 
     const email =
-
         document.getElementById("email").value;
 
     const password =
-
         document.getElementById("password").value;
 
     const message =
-
         document.getElementById("message");
 
     message.innerHTML = "";
 
-    const { error } =
+    try {
 
-        wait window.supabaseClient.auth.signInWithPassword({
+        const { error } =
+            await window.supabaseClient.auth.signInWithPassword({
+                email,
+                password
+            });
 
-            email,
+        if (error) {
 
-            password
+            message.className = "message error";
+            message.innerHTML = error.message;
+            return;
+        }
 
-        });
+        window.location.href =
+            "/members/index.html";
 
-    if (error) {
+    } catch (err) {
+
+        console.error(err);
 
         message.className = "message error";
-
-        message.innerHTML = error.message;
-
-        return;
-
+        message.innerHTML =
+            "Login failed. Check browser console.";
     }
-
-    window.location.href =
-
-        "/members-index.html";
-
 }
 
 async function resetPassword() {
 
     const email =
-
         document.getElementById("email").value;
 
     const message =
-
         document.getElementById("message");
 
     if (!email) {
 
         message.className = "message error";
-
         message.innerHTML =
-
             "Please enter your email address first.";
 
         return;
-
     }
 
-    const { error } =
+    try {
 
-        await window.supabaseClient.auth.resetPasswordForEmail(
+        const { error } =
+            await window.supabaseClient.auth.resetPasswordForEmail(
+                email,
+                {
+                    redirectTo:
+                        window.location.origin +
+                        "/reset-password.html"
+                }
+            );
 
-            email,
+        if (error) {
 
-            {
+            message.className = "message error";
+            message.innerHTML =
+                error.message;
 
-                redirectTo:
+            return;
+        }
 
-                window.location.origin +
+        message.className =
+            "message success";
 
-                "/reset-password.html"
+        message.innerHTML =
+            "Password reset email sent.";
 
-            }
+    } catch (err) {
 
-        );
+        console.error(err);
 
-    if (error) {
+        message.className =
+            "message error";
 
-        message.className = "message error";
-
-        message.innerHTML = error.message;
-
-        return;
-
+        message.innerHTML =
+            "Unable to send password reset email.";
     }
-
-    message.className = "message success";
-
-    message.innerHTML =
-
-        "Password reset email sent.";
-
 }
 
 async function checkExistingSession() {
 
-    const {
+    try {
 
-        data: { session }
+        const {
+            data: { session }
+        } =
+        await window.supabaseClient.auth.getSession();
 
-    } =
+        if (session) {
 
-    await window.supabaseClient.auth.getSession()
+            window.location.href =
+                "/members/index.html";
+        }
 
-    if (session) {
+    } catch (err) {
 
-        window.location.href =
-
-            "/members-index.html";
-
+        console.error(err);
     }
-
 }
 
 checkExistingSession();
@@ -289,5 +228,4 @@ checkExistingSession();
 </script>
 
 </body>
-
 </html>
